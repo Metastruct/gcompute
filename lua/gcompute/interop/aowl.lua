@@ -37,6 +37,19 @@ local function RegisterAowlCommands ()
 		end
 	end
 	
+	-- Every one of these commands is an alias spelling of the same
+	-- evaluate-and-print operation, so what a command does is decided entirely
+	-- by the host its expression runs on.
+	local hostDescriptions =
+	{
+		[GLib.GetServerId ()] = "Runs an expression and prints the result on the server",
+		["Clients"          ] = "Runs an expression and prints the result on every client",
+		["Shared"           ] = "Runs an expression and prints the result on the server and every client",
+		["^"                ] = "Runs an expression and prints the result on your own client",
+		["Client"           ] = "Runs an expression and prints the result on another player's client",
+		["Both"             ] = "Runs an expression and prints the result on the server and your own client",
+	}
+	
 	local executionCommands =
 	{
 		["p"      ] = GLib.GetServerId (),
@@ -74,6 +87,7 @@ local function RegisterAowlCommands ()
 	for command, defaultHostId in pairs (executionCommands) do
 		aowl.AddCommand (
 			command,
+			hostDescriptions [defaultHostId],
 			function (ply, expression, target)
 				local expression = expression or ""
 				
